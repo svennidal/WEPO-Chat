@@ -1,0 +1,53 @@
+<div class="alert alert-danger" ng-cloak ng-show="errorMessage != ''">
+	{{errorMessage}}
+</div>
+
+<h3>Hi {{currentUser}} - Room {{currentRoom}}</h3>
+<div class="col-md-9">
+	TODO - display chat
+	
+	<!--
+	<ul id='messages'></ul>
+	<form action=''>
+		<input id='m' autocomplete='off' /><button>Send</button>
+	</form>
+	-->
+	<!--
+	<h3>Messages</h3>
+		<div class='overflowable'>
+			<p ng-repeat='messages in room.messages' ng-class='{alert: message.user == "alert"}'> {{message.user}}: {{message:text}}
+		</div>
+
+		<form ng-submit='sendmsg()'>
+			<input ng-model='message'>
+			<input type='submit' value='Send'>
+		</form>
+		-->
+	<!--
+	<div class='form-group'>
+		<label for='message' class='control-label'>Message</label>
+		<input type='text' class='form-control' id='message' name='message' ng-model='message' />
+	</div>
+	<button type='button' class='btn btn-primary' ng-click='sendMessage()'>Send</button>
+	-->
+
+	<h4>Chats</h4>
+	<ul>
+		<li ng-repeat='msg in messages'>{{msg.timestamp}}  <h4>{{msg.nick}}</h4>:  {{msg.message}}</li>
+	</ul>
+
+	<form ng-submit='sendMessage()'>
+		<input type='text' class='form-control' id='message' autocomplete='off' name='message' ng-model='message' />
+		<!--<input type='submit' value='Send' />-->
+		<button type='button' class='btn btn-primary' ng-click='sendMessage()'>Send</button>
+	</form>
+
+</div>
+<div class="col-md-3">
+	<h4>Users in this room</h4>
+	<div class="well">	
+		<ul>
+			<li ng-repeat="user in currentUsers">{{user}}</li>
+		</ul>
+	</div>
+</div>
