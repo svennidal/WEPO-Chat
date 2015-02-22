@@ -48,7 +48,9 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 
 	socket.on('updateusers', function (roomName, users, ops) {
 		// TODO: Check if the roomName equals the current room !
-		$scope.currentUsers = users;
+		if($scope.currentRoom === roomName){
+			$scope.currentUsers = users;
+		}
 	});		
 
 	socket.emit('joinroom', $scope.currentRoom, function (success, reason) {
@@ -75,9 +77,25 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 
 	socket.on('updatechat', function(roomName, history){
 		$scope.messages = history;
-		console.log($scope.messages);
-		console.log($scope.messages[0].nick);
+		console.log(roomName);
 		console.log(history);
 	});
 
 });
+
+/*
+ChatClient.directive('schrollBottom', function() {
+	return {
+		scope: {
+			schrollBottom: '='
+		},
+		link: function(scope, element){
+			scope.$watchCollection('schrollBottom', function(newValue){
+				if(newValue){
+					$(element).scrollTop($(element)[0].scrollHeight);
+				}
+			});
+		}
+	}
+});
+*/

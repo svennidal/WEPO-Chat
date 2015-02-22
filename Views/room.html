@@ -32,9 +32,11 @@
 	-->
 
 	<h4>Chats</h4>
-	<ul>
-		<li ng-repeat='msg in messages'>{{msg.timestamp}}  <h4>{{msg.nick}}</h4>:  {{msg.message}}</li>
-	</ul>
+		<!--<div schroll-bottom='messages'>-->
+		<ul>
+			<li ng-repeat='msg in messages'>{{msg.timestamp}}  <h4>{{msg.nick}}</h4>:  {{msg.message}}</li>
+		</ul>
+		<!--</div>-->
 
 	<form ng-submit='sendMessage()'>
 		<input type='text' class='form-control' id='message' autocomplete='off' name='message' ng-model='message' />
