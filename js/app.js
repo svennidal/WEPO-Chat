@@ -58,6 +58,7 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 		}
 	});
 
+	/* ********************************** ADDED ******************************* */
 	$scope.sendMessage = function() {
 		console.log($scope.message);
 		var packet = {
