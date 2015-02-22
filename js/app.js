@@ -53,7 +53,11 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 		}
 	});		
 
-	socket.emit('joinroom', $scope.currentRoom, function (success, reason) {
+	var joinObj = {
+		room: $scope.currentRoom,
+		pass: ''
+	};
+	socket.emit('joinroom', joinObj, function (success, reason) {
 		if (!success)
 		{
 			$scope.errorMessage = reason;
@@ -64,7 +68,8 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 	$scope.sendMessage = function() {
 		console.log($scope.message);
 		var packet = {
-			msg: $scope.message
+			msg: $scope.message,
+			roomName: $scope.currentRoom
 		};
 		socket.emit('sendmsg', packet, function(success, reason){
 			if(!success)
@@ -77,8 +82,9 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 
 	socket.on('updatechat', function(roomName, history){
 		$scope.messages = history;
-		console.log(roomName);
-		console.log(history);
+		console.log('routeParams: ' + $routeParams.room);
+		console.log('roomName from chatserver: ' + roomName);
+		console.log('history from chatserver: ' + history);
 	});
 
 });
