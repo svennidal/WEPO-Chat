@@ -42,7 +42,7 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 	$scope.currentRoom = $routeParams.room;
 	$scope.currentUser = $routeParams.user;
 	$scope.currentUsers = [];
-	$scope.errorMessage = ''
+	$scope.errorMessage = '';
 	
 	$scope.messages = [];
 
