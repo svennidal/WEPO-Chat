@@ -33,9 +33,11 @@
 
 	<h4>Chats</h4>
 		<!--<div schroll-bottom='messages'>-->
+	<div id='messageList'>
 		<ul>
 			<li ng-repeat='msg in messages'>{{msg.timestamp}}  <h4>{{msg.nick}}</h4>:  {{msg.message}}</li>
 		</ul>
+	</div>
 		<!--</div>-->
 
 	<form ng-submit='sendMessage()'>
