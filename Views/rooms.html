@@ -1,5 +1,9 @@
 <h3>Hi {{currentUser}} - Active chat rooms</h3>
 <div class="well">
+	<form>
+		<input type='text' class='form-control' id='newRoom' autocomplete='off' name='newRoom' ng-model='newRoom' />
+		<button type='button' class='btn btn-primary' ng-click='createRoom()'>Create</button>
+	</form>
 	<ul ng-repeat="room in rooms">
 		<li><a href="#/room/{{currentUser}}/{{room}}">{{room}}</a></li>
 	</ul>

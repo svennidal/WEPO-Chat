@@ -34,8 +34,31 @@ ChatClient.controller('LoginController', function ($scope, $location, $rootScope
 
 ChatClient.controller('RoomsController', function ($scope, $location, $rootScope, $routeParams, socket) {
 	// TODO: Query chat server for active rooms
-	$scope.rooms = ['Room 1','Room 2','Room 3','Room 4','Room 5'];
+	//$scope.rooms = ['Room 1','Room 2','Room 3','Room 4','Room 5'];
+
 	$scope.currentUser = $routeParams.user;
+	$scope.rooms = [];
+
+	$scope.createRoom = function(){
+		console.log('createRoom: ' + $scope.newRoom);
+		$scope.rooms.push($scope.newRoom);
+	};
+
+	socket.emit('rooms');
+	socket.on('roomlist', function(roomList){
+		console.log('roomList: ' + roomList);
+
+		for(room in roomList){
+			$scope.rooms.push(room);
+		}
+
+		/*$scope.rooms = $.map(roomList, function(value, index){
+			return [value];
+		});
+		*/
+
+	});
+
 });
 
 ChatClient.controller('RoomController', function ($scope, $location, $rootScope, $routeParams, socket) {
@@ -89,19 +112,3 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 
 });
 
-/*
-ChatClient.directive('schrollBottom', function() {
-	return {
-		scope: {
-			schrollBottom: '='
-		},
-		link: function(scope, element){
-			scope.$watchCollection('schrollBottom', function(newValue){
-				if(newValue){
-					$(element).scrollTop($(element)[0].scrollHeight);
-				}
-			});
-		}
-	}
-});
-*/
