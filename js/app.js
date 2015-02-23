@@ -34,29 +34,23 @@ ChatClient.controller('LoginController', function ($scope, $location, $rootScope
 
 ChatClient.controller('RoomsController', function ($scope, $location, $rootScope, $routeParams, socket) {
 	// TODO: Query chat server for active rooms
-	//$scope.rooms = ['Room 1','Room 2','Room 3','Room 4','Room 5'];
-
 	$scope.currentUser = $routeParams.user;
 	$scope.rooms = [];
 
+	// Creating a room - SDB
 	$scope.createRoom = function(){
 		console.log('createRoom: ' + $scope.newRoom);
 		$scope.rooms.push($scope.newRoom);
 	};
 
+	// Getting a list of all active rooms - SDB
 	socket.emit('rooms');
 	socket.on('roomlist', function(roomList){
 		console.log('roomList: ' + roomList);
 
-		for(room in roomList){
+		for(var room in roomList){
 			$scope.rooms.push(room);
 		}
-
-		/*$scope.rooms = $.map(roomList, function(value, index){
-			return [value];
-		});
-		*/
-
 	});
 
 });
@@ -71,11 +65,15 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 
 	socket.on('updateusers', function (roomName, users, ops) {
 		// TODO: Check if the roomName equals the current room !
+		// Making sure the messages go to a right room - SDB
 		if($scope.currentRoom === roomName){
 			$scope.currentUsers = users;
 		}
 	});		
 
+	// Creating a object for the serverside joinroom operation
+	// Password property needs to be changed in order to allow for a password.
+	// SDB
 	var joinObj = {
 		room: $scope.currentRoom,
 		pass: ''
@@ -88,6 +86,8 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 	});
 
 	/* ********************************** ADDED ******************************* */
+
+	// The angular-function sendMessage()
 	$scope.sendMessage = function() {
 		console.log($scope.message);
 		var packet = {
@@ -100,9 +100,11 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 				$scope.errorMessage = reason;
 			}
 		});
+		// clearing the textbox
 		$('#message').val('');
 	};
 
+	// Updating the chat history according to the current room. - SDB
 	socket.on('updatechat', function(roomName, history){
 		$scope.messages = history;
 		console.log('routeParams: ' + $routeParams.room);
