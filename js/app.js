@@ -46,7 +46,7 @@ ChatClient.controller('RoomsController', function ($scope, $location, $rootScope
 	// Getting a list of all active rooms - SDB
 	socket.emit('rooms');
 	socket.on('roomlist', function(roomList){
-		console.log('roomList: ' + roomList);
+		//console.log('roomList: ' + roomList);
 
 		for(var room in roomList){
 			$scope.rooms.push(room);
@@ -107,9 +107,11 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 	// Updating the chat history according to the current room. - SDB
 	socket.on('updatechat', function(roomName, history){
 		$scope.messages = history;
+		/*
 		console.log('routeParams: ' + $routeParams.room);
 		console.log('roomName from chatserver: ' + roomName);
 		console.log('history from chatserver: ' + history);
+		*/
 	});
 
 });
