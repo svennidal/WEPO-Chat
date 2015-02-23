@@ -25,3 +25,25 @@ form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 
 #messages { list-style-type: none; margin: 0; padding: 0; }
 #messages li { padding: 5px 10px; }
 #messages li:nth-child(odd) { background: #eee; }
+
+.messageList {
+	width: 100%;
+	max-width: 100%;
+}
+.messageList .singleMessage {
+}
+
+.messageList .singleMessage:nth-child(odd) {
+	background: #eee;
+}
+.messageList .nick {
+	font-weight: bold;
+	margin-right: 10px;
+}
+.messageList .messageData {
+	min-width: 300px;
+	
+}
+
+.messageList .timestamp {
+}
