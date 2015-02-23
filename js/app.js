@@ -97,6 +97,20 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 	};
 
 
+
+	// The angular-function kickUser(user)
+	$scope.kickUser = function(kickedUser){
+		var kickPacket = {
+			room: $scope.currentRoom,
+			user: kickedUser
+		};
+		socket.emit('kick', kickPacket, function() {
+			// TODO: fix
+		});
+	};
+
+
+
 	// The angular-function sendMessage()
 	$scope.sendMessage = function() {
 		console.log($scope.message);

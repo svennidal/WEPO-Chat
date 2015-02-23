@@ -36,7 +36,9 @@
 	<button type='button' class='btn btn-warning' ng-click='leaveRoom()' href='/#/rooms/{{currentUser}}'>Leave</button>
 	<div class="well">	
 		<ul>
-			<li ng-repeat="user in currentUsers">{{user}}</li>
+			<li ng-repeat="user in currentUsers">{{user}}
+			<button class='btn btn-danger' ng-click='kickUser(user)'>Kick</button>
+			</li>
 		</ul>
 	</div>
 </div>
