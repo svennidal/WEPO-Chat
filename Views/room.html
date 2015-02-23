@@ -33,6 +33,7 @@
 </div>
 <div class="col-md-3">
 	<h4>Users in this room</h4>
+	<button type='button' class='btn btn-warning' ng-click='leaveRoom()' href='/#/rooms/{{currentUser}}'>Leave</button>
 	<div class="well">	
 		<ul>
 			<li ng-repeat="user in currentUsers">{{user}}</li>

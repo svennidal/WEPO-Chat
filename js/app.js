@@ -46,7 +46,7 @@ ChatClient.controller('RoomsController', function ($scope, $location, $rootScope
 	// Getting a list of all active rooms - SDB
 	socket.emit('rooms');
 	socket.on('roomlist', function(roomList){
-		//console.log('roomList: ' + roomList);
+		console.log(roomList);
 
 		for(var room in roomList){
 			$scope.rooms.push(room);
@@ -85,7 +85,17 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 		}
 	});
 
-	/* ********************************** ADDED ******************************* */
+	$scope.leaveRoom = function(){
+		console.log('LeaveRoom: ' + document.location);
+		var url = '/#/rooms/' + $scope.currentUser + '/';
+		document.location = url;
+		socket.emit('partroom', $scope.currentRoom, function(success, reason){
+			if(!success){
+				$scope.errorMessage = reason;
+			}
+		});
+	};
+
 
 	// The angular-function sendMessage()
 	$scope.sendMessage = function() {

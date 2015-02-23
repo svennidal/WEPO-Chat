@@ -140,6 +140,7 @@ io.sockets.on('connection', function (socket) {
 
 	//When a user leaves a room this gets performed.
 	socket.on('partroom', function (room) {
+		console.log(socket.username + ' has left ' + room);
 		//remove the user from the room roster and room op roster.
 		delete rooms[room].users[socket.username];
 		delete rooms[room].ops[socket.username];
