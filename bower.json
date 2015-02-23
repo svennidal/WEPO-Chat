@@ -5,8 +5,7 @@
     "andriivars <andrii13@ru.is>"
   ],
   "license": "MIT",
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "main": "index.js",
   "private": true,
   "ignore": [
@@ -16,12 +15,10 @@
     "test",
     "tests"
   ],
-
   "dependencies": {
     "bootstrap": "~3.3.2",
     "jquery": "~2.1.3",
     "angular": "~1.3.13",
     "angular-route": "~1.3.13",
-    "socket.io": "~1.3.4"
   }
 }
