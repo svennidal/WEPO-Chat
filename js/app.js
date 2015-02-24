@@ -55,10 +55,9 @@ ChatClient.controller('RoomsController', function ($scope, $location, $rootScope
 			if (!contains(roomList[room].banned, $scope.currentUser)) {
 				$scope.rooms.push(room);
 			}
-			else
-			{	
+			else {	
 				$scope.CurrentUserIsBanned = true;
-				console.log("bannadur i " + room)
+				console.log("bannadur i " + room);
 				$scope.banstring = "banned from";
 				$scope.banrooms.push(room);
 			}
