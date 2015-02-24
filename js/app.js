@@ -113,8 +113,10 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 
 	// If a user is kicked
 	socket.on('kicked', function(room, kickedUser, op){
+		console.log('kicked');
 		if($scope.currentUser === kickedUser){
 			console.log('You are the kicked user');
+			$scope.leaveRoom();
 		}
 	});
 
