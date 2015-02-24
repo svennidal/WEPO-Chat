@@ -60,3 +60,16 @@ form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 
 	list-style-type: square;
 	color: red;
 }
+
+#topicInput {
+	min-width: 90%;
+	float: left;
+	display: inline;
+}
+#buttonTopic {
+	float:right;
+}
+.topic {
+	font-style: italic;
+	text-indent: 50px;
+}

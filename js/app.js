@@ -61,6 +61,8 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 	$scope.currentOps = [];
 	$scope.errorMessage = '';
 	$scope.currentBanned = [];
+	$scope.currentTopic = '';
+	$scope.currentUserIsOp = false;
 
 	
 	$scope.messages = [];
@@ -71,8 +73,47 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 		if($scope.currentRoom === roomName){
 			$scope.currentUsers = users;
 			$scope.currentOps = ops;
+			$scope.currentUserIsOp = false;
+			for(var op in ops){
+				if(op === $scope.currentUser){
+					$scope.currentUserIsOp = true;
+				}
+			}
 		}
 	});		
+
+	/******************************* TOPIC **************************************/
+	$scope.setTopic = function(){
+		var topicPacket = {
+			room: $scope.currentRoom,
+			topic: $scope.topic
+		};
+		var success = true;
+		socket.emit('settopic', topicPacket, function(success, reason){
+			if(!success){
+				$scope.errorMessage = reason;
+			}
+		});
+		var success = true;
+		var topicMessage = '*** topic:"' + $scope.topic + '" was set by me. ***';
+		var packet = {
+			msg: topicMessage,
+			roomName: $scope.currentRoom
+		};
+		socket.emit('sendmsg', packet, function(success, reason){
+			if(!success){
+				$scope.errorMessage = reason;
+			}
+		});
+		$('#topicInput').val('');
+	};
+	socket.on('updatetopic', function(room, topic, user){
+		if($scope.currentRoom === room){
+			$scope.currentTopic = topic;
+		}
+	});
+	/******************************* // TOPIC ***********************************/
+
 
 	// Creating a object for the serverside joinroom operation
 	// Password property needs to be changed in order to allow for a password.
@@ -87,6 +128,7 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 			$scope.errorMessage = reason;
 		}
 	});
+
 
 	$scope.leaveRoom = function(){
 		console.log('LeaveRoom: ' + document.location);

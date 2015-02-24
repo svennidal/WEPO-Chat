@@ -1,13 +1,14 @@
 <div class="alert alert-danger" ng-cloak ng-show="errorMessage != ''">
 	{{errorMessage}}
 </div>
-
 <h3>Hi {{currentUser}} - Room {{currentRoom}}</h3>
+<div class='opTopic' ng-cloak ng-show='currentUserIsOp'>
+	<input type='text' id='topicInput' ng-model='topic' placeholder='{{currentTopic}}' >
+	<button class='btn btn-primary btn-xs' id='buttonTopic' ng-click='setTopic()'>Set Topic</button>
+</div>
+<h4 class='topic' ng-cloak ng-show='!currentUserIsOp'>{{currentTopic}}</h4>
 <div class="col-md-9">
-	TODO - display chat
 
-	<h4>Chats</h4>
-		<!--<div schroll-bottom='messages'>-->
 	<table class='messageList'>
 		<tr class='singleMessage' ng-repeat='msg in messages'>
 			<td class='nick'>{{msg.nick}}</td>
