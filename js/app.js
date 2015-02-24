@@ -103,6 +103,7 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 /********************************************** KICK *************************/
 	// The angular-function kickUser(user)
 	$scope.kickUser = function(kickedUser){
+		var success = true;
 		var kickPacket = {
 			room: $scope.currentRoom,
 			user: kickedUser
@@ -120,6 +121,7 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 			$scope.leaveRoom();
 		}
 		if($scope.currentUser === op && $scope.currentRoom === room){
+			var success = true;
 			var kickMessage = '*** ' + kickedUser + ' was kicked by me. ***';
 			var packet = {
 				msg: kickMessage,
@@ -136,15 +138,39 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 
 
 
+/*********************************************** BAN **************************/
 	$scope.banUser = function(bannedUser){
+		var success = true;
 		var BanPacket = {
 			room: $scope.currentRoom,
 			user: bannedUser
 		};
-		socket.emit('ban', BanPacket, function() {
-			// Do something
+		socket.emit('ban', BanPacket, function(success, reason) {
+			if(!success){
+				$scope.errorMessage = reason;
+			}
 		});
-	}
+	};
+	socket.on('banned', function(room, bannedUser, op){
+		if($scope.currentUser === bannedUser && $scope.currentRoom === room){
+			$scope.leaveRoom();
+		}
+		if($scope.currentUser === op && $scope.currentRoom === room){
+			var success = true;
+			var bannedMessage = '*** ' + bannedUser + ' was banned by me. ***';
+			var packet = {
+				msg: bannedMessage,
+				roomName: $scope.currentRoom
+			};
+			socket.emit('sendmsg', packet, function(success, reason){
+				if(!success){
+					$scope.errorMessage = reason;
+				}
+			});
+		}
+	});
+/********************************************* // BAN *************************/
+
 
 /************************************************* OP *************************/
 	// The angular-function Op(user)
