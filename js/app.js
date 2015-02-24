@@ -72,7 +72,7 @@ ChatClient.controller('RoomsController', function ($scope, $location, $rootScope
 			}
 		}
 	});
-/******************************************** // REFRESH ROOM LIST ************/
+/********************************************* // REFRESH ROOM LIST ************/
 
 
 
@@ -85,7 +85,6 @@ ChatClient.controller('RoomsController', function ($scope, $location, $rootScope
 	};
 /*************************************** // LOGOUT ****************************/
 
-	
 });
 
 
@@ -138,6 +137,9 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 	socket.emit('joinroom', joinObj, function (success, reason) {
 		if (!success)
 		{
+			$scope.errorMessage = reason;
+			var url = '/#/rooms/' + $scope.currentUser + '/';
+			document.location = url;
 			$scope.errorMessage = reason;
 		}
 	});
