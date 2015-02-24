@@ -8,6 +8,7 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 	$scope.currentBanned = [];
 	$scope.currentTopic = '';
 	$scope.currentUserIsOp = false;
+	$scope.sendpmto = "";
 
 	
 	$scope.messages = [];
@@ -309,6 +310,30 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 	});
 /******************************************* SEND MESSAGE *********************/
 
+/******************************************* SEND PRIVATE MESSAGE *************/
+
+$scope.sendPMessage = function() {
+	if($scope.sendpmto === "")
+		return;
+	var PMpacket = {
+		message: $scope.message,
+		nick: $scope.sendpmto
+	};
+	socket.emit('privatemsg', PMpacket, function(success, reason){
+		if(!success)
+			{
+				$scope.errorMessage = reason;
+			}
+		// clearing the textbox
+		$('#message').val('');
+	});
+	console.log($scope.message);
+	console.log($scope.sendpmto);
+}
+	socket.on('recv_privatemsg', function(username_, message_){
+		console.log(message_ + " from " + username_);
+	});
+/*************************************** // SEND PRIVATE MESSAGE ***************/
 
 /****************************************** LOGOUT ****************************/
 	$scope.disconnect = function(){
