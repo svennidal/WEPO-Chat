@@ -13,7 +13,7 @@ ChatClient.config(
 );
 
 ChatClient.controller('LoginController', function ($scope, $location, $rootScope, $routeParams, socket) {
-	
+
 	$scope.errorMessage = '';
 	$scope.nickname = '';
 
@@ -97,10 +97,12 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 	$scope.currentPassword = $routeParams.pass;
 	$scope.currentUsers = [];
 	$scope.currentOps = [];
+	$scope.currentInsideroom = [];
 	$scope.errorMessage = '';
 	$scope.currentBanned = [];
 	$scope.currentTopic = '';
 	$scope.currentUserIsOp = false;
+	$scope.sendpmto = "";
 
 	
 	$scope.messages = [];
@@ -111,6 +113,9 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 		if($scope.currentRoom === roomName){
 			$scope.currentUsers = users;
 			$scope.currentOps = ops;
+			$scope.currentInsideroom = unite($scope.currentUsers, $scope.currentOps);
+			console.log("currinside" + $scope.currentInsideroom);
+			console.log("currops" + $scope.currentOps);
 			$scope.currentUserIsOp = false;
 			for(var op in ops){
 				if(op === $scope.currentUser){
@@ -397,7 +402,32 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 	socket.on('updatechat', function(roomName, history){
 		$scope.messages = history;
 	});
-/******************************************* SEND MESSAGE *********************/
+/**************************************** // SEND MESSAGE *********************/
+
+/******************************************* SEND PRIVATE MESSAGE *************/
+
+$scope.sendPMessage = function() {
+	if($scope.sendpmto === "")
+		return;
+	var PMpacket = {
+		message: $scope.message,
+		nick: $scope.sendpmto
+	};
+	socket.emit('privatemsg', PMpacket, function(success, reason){
+		if(!success)
+			{
+				$scope.errorMessage = reason;
+			}
+		// clearing the textbox
+		$('#message').val('');
+	});
+	console.log($scope.message);
+	console.log($scope.sendpmto);
+}
+	socket.on('recv_privatemsg', function(username_, message_){
+		console.log(message_ + " from " + username_);
+	});
+/*************************************** // SEND PRIVATE MESSAGE ***************/
 
 
 /****************************************** LOGOUT ****************************/
@@ -420,6 +450,15 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 
 
 
+unite = function(arr1, arr2)
+{
+	arr3 = [];
+	for(var item in arr1)
+		arr3.push(arr1[item]);
+	for(var item in arr2)
+		arr3.push(arr2[item]);
+	return arr3;
+}
 
 contains = function(arr, obj){
 	//console.log("contains keyrt med " + obj);
