@@ -38,6 +38,7 @@ ChatClient.controller('RoomsController', function ($scope, $location, $rootScope
 	$scope.rooms = [];
 	$scope.banrooms = [];
 	$scope.banstring = "";
+	$scope.curruserisbanned = false;
 
 	// Creating a room - SDB
 	$scope.createRoom = function(){
@@ -56,6 +57,7 @@ ChatClient.controller('RoomsController', function ($scope, $location, $rootScope
 			}
 			else
 			{	
+				$scope.CurrentUserIsBanned = true;
 				console.log("bannadur i " + room)
 				$scope.banstring = "banned from";
 				$scope.banrooms.push(room);
