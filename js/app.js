@@ -18,6 +18,7 @@ ChatClient.controller('LoginController', function ($scope, $location, $rootScope
 	$scope.nickname = '';
 
 	$scope.login = function() {			
+		console.log('login');
 		if ($scope.nickname === '') {
 			$scope.errorMessage = 'Please choose a nick-name before continuing!';
 		} else {
@@ -31,6 +32,7 @@ ChatClient.controller('LoginController', function ($scope, $location, $rootScope
 		}
 	};
 });
+
 
 ChatClient.controller('RoomsController', function ($scope, $location, $rootScope, $routeParams, socket) {
 	// TODO: Query chat server for active rooms
@@ -380,9 +382,9 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 	socket.on('updatechat', function(roomName, history){
 		$scope.messages = history;
 	});
-
-});
 /******************************************* SEND MESSAGE *********************/
+}); // room-Controller
+
 
 
 
