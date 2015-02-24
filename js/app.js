@@ -108,6 +108,15 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 			// TODO: fix
 		});
 	};
+	$scope.banUser = function(bannedUser){
+		var BanPacket = {
+			room: $scope.currentRoom,
+			user: bannedUser
+		};
+		socket.emit('ban', BanPacket, function() {
+			// Do something
+		});
+	}
 
 
 
