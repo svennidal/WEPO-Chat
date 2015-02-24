@@ -1,13 +1,14 @@
 <div class="alert alert-danger" ng-cloak ng-show="errorMessage != ''">
 	{{errorMessage}}
 </div>
-
 <h3>Hi {{currentUser}} - Room {{currentRoom}}</h3>
+<div class='opTopic' ng-cloak ng-show='currentUserIsOp'>
+	<input type='text' id='topicInput' ng-model='topic' placeholder='{{currentTopic}}' >
+	<button class='btn btn-primary btn-xs' id='buttonTopic' ng-click='setTopic()'>Set Topic</button>
+</div>
+<h4 class='topic' ng-cloak ng-show='!currentUserIsOp'>{{currentTopic}}</h4>
 <div class="col-md-9">
-	TODO - display chat
 
-	<h4>Chats</h4>
-		<!--<div schroll-bottom='messages'>-->
 	<table class='messageList'>
 		<tr class='singleMessage' ng-repeat='msg in messages'>
 			<td class='nick'>{{msg.nick}}</td>
@@ -33,12 +34,29 @@
 </div>
 <div class="col-md-3">
 	<h4>Users in this room</h4>
-	<button type='button' class='btn btn-warning' ng-click='leaveRoom()' href='/#/rooms/{{currentUser}}'>Leave</button>
+	<button type='button' class='btn btn-warning btn-sm' ng-click='leaveRoom()' href='/#/rooms/{{currentUser}}'>Leave</button>
 	<div class="well">	
 		<ul>
-			<li ng-repeat="user in currentUsers">{{user}}
-			<button class='btn btn-danger' ng-click='kickUser(user)'>Kick</button>
-			<button class='btn btn-danger' ng-click='banUser(user)'>ban</button>
+			<li class='ops' ng-repeat="op in currentOps">{{op}}
+			<button class='btn btn-warning btn-xs' ng-click='kickUser(op)'>Kick</button>
+			<button class='btn btn-danger btn-xs' ng-click='banUser(op)'>Ban</button>
+			<button class='btn btn-info btn-xs' ng-click='deOpOp(op)'>DeOp</button>
+			</li>
+		</ul>
+	</div>
+	<div class="well">	
+		<ul>
+			<li class='users' ng-repeat="user in currentUsers">{{user}}
+			<button class='btn btn-warning btn-xs' ng-click='kickUser(user)'>Kick</button>
+			<button class='btn btn-danger btn-xs' ng-click='banUser(user)'>Ban</button>
+			<button class='btn btn-info btn-xs' ng-click='opUser(user)'>Op</button>
+			</li>
+		</ul>
+	</div>
+	<div class="well">	
+		<ul>
+			<li class='banned' ng-repeat="banned in currentBanned">{{banned}}
+			<button class='btn btn-success btn-xs' ng-click='unBanUser(banned)'>Unban</button>
 			</li>
 		</ul>
 	</div>

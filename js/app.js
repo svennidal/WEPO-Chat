@@ -74,7 +74,12 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 	$scope.currentRoom = $routeParams.room;
 	$scope.currentUser = $routeParams.user;
 	$scope.currentUsers = [];
+	$scope.currentOps = [];
 	$scope.errorMessage = '';
+	$scope.currentBanned = [];
+	$scope.currentTopic = '';
+	$scope.currentUserIsOp = false;
+
 	
 	$scope.messages = [];
 
@@ -83,8 +88,48 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 		// Making sure the messages go to a right room - SDB
 		if($scope.currentRoom === roomName){
 			$scope.currentUsers = users;
+			$scope.currentOps = ops;
+			$scope.currentUserIsOp = false;
+			for(var op in ops){
+				if(op === $scope.currentUser){
+					$scope.currentUserIsOp = true;
+				}
+			}
 		}
 	});		
+
+	/******************************* TOPIC **************************************/
+	$scope.setTopic = function(){
+		var topicPacket = {
+			room: $scope.currentRoom,
+			topic: $scope.topic
+		};
+		var success = true;
+		socket.emit('settopic', topicPacket, function(success, reason){
+			if(!success){
+				$scope.errorMessage = reason;
+			}
+		});
+		var success = true;
+		var topicMessage = '*** topic:"' + $scope.topic + '" was set by me. ***';
+		var packet = {
+			msg: topicMessage,
+			roomName: $scope.currentRoom
+		};
+		socket.emit('sendmsg', packet, function(success, reason){
+			if(!success){
+				$scope.errorMessage = reason;
+			}
+		});
+		$('#topicInput').val('');
+	};
+	socket.on('updatetopic', function(room, topic, user){
+		if($scope.currentRoom === room){
+			$scope.currentTopic = topic;
+		}
+	});
+	/******************************* // TOPIC ***********************************/
+
 
 	// Creating a object for the serverside joinroom operation
 	// Password property needs to be changed in order to allow for a password.
@@ -100,6 +145,7 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 		}
 	});
 
+
 	$scope.leaveRoom = function(){
 		console.log('LeaveRoom: ' + document.location);
 		var url = '/#/rooms/' + $scope.currentUser + '/';
@@ -113,8 +159,10 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 
 
 
+/********************************************** KICK *************************/
 	// The angular-function kickUser(user)
 	$scope.kickUser = function(kickedUser){
+		var success = true;
 		var kickPacket = {
 			room: $scope.currentRoom,
 			user: kickedUser
@@ -126,34 +174,144 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 		});
 	};
 
-	// If a user is kicked
+	// When a user is kicked the server emits 'kicked'
 	socket.on('kicked', function(room, kickedUser, op){
-		console.log('kicked');
-		if($scope.currentUser === kickedUser){
-			console.log('You are the kicked user');
+		if($scope.currentUser === kickedUser && $scope.currentRoom === room){
 			$scope.leaveRoom();
 		}
+		if($scope.currentUser === op && $scope.currentRoom === room){
+			var success = true;
+			var kickMessage = '*** ' + kickedUser + ' was kicked by me. ***';
+			var packet = {
+				msg: kickMessage,
+				roomName: $scope.currentRoom
+			};
+			socket.emit('sendmsg', packet, function(success, reason){
+				if(!success){
+					$scope.errorMessage = reason;
+				}
+			});
+		}
 	});
+/******************************************** // KICK *************************/
 
 
 
+/*********************************************** BAN **************************/
 	$scope.banUser = function(bannedUser){
+		var success = true;
 		var BanPacket = {
 			room: $scope.currentRoom,
 			user: bannedUser
 		};
-		socket.emit('ban', BanPacket, function() {
-			// Do something
+		socket.emit('ban', BanPacket, function(success, reason) {
+			if(!success){
+				$scope.errorMessage = reason;
+			}
 		});
-	}
+	};
 	socket.on('banned', function(room, bannedUser, op){
-		console.log('kicked');
-		if($scope.currentUser === bannedUser){
-			console.log('You are the banned user');
+		$scope.currentBanned.push(bannedUser);
+		if($scope.currentUser === bannedUser && $scope.currentRoom === room){
 			$scope.leaveRoom();
 		}
+		if($scope.currentUser === op && $scope.currentRoom === room){
+			var success = true;
+			var bannedMessage = '*** ' + bannedUser + ' was banned by me. ***';
+			var packet = {
+				msg: bannedMessage,
+				roomName: $scope.currentRoom
+			};
+			socket.emit('sendmsg', packet, function(success, reason){
+				if(!success){
+					$scope.errorMessage = reason;
+				}
+			});
+		}
 	});
+/********************************************* // BAN *************************/
 
+/********************************************** UNBAN *************************/
+	// The angular-function UnBanUser(unBannedUser)
+	$scope.unBanUser = function(unBannedUser){
+		var index = $scope.currentBanned.indexOf(unBannedUser);
+		if(index > -1){ $scope.currentBanned.splice(index, 1); }
+		console.log($scope.currentBanned + ' is no ' + index);
+		var success = true;
+		var unBanPacket = {
+			room: $scope.currentRoom,
+			user: unBannedUser
+		};
+		socket.emit('unban', unBanPacket, function(succes, reason){
+			if(!success){
+				$scope.errorMessage = reason;
+			}
+		});
+	};
+/********************************************** // UNBAN **********************/
+
+/************************************************* OP *************************/
+	// The angular-function Op(user)
+	$scope.opUser = function(oppedUser){
+		var success = true;
+		var opPacket = {
+			room: $scope.currentRoom,
+			user: oppedUser
+		};
+		socket.emit('op', opPacket, function(succes, reason){
+			if(!success){
+				$scope.errorMessage = reason;
+			}
+		});
+	};
+	socket.on('opped', function(room, oppedUser, op){
+		var success = true;
+		if($scope.currentUser === op && $scope.currentRoom === room){
+			var opMessage = '*** ' + oppedUser + ' was opped by me. ***';
+			var packet = {
+				msg: opMessage,
+				roomName: $scope.currentRoom
+			};
+			socket.emit('sendmsg', packet, function(success, reason){
+				if(!success){
+					$scope.errorMessage = reason;
+				}
+			});
+		}
+	});
+/********************************************** // OP *************************/
+
+/************************************************* DEOP *************************/
+	// The angular-function DeOp(user)
+	$scope.deOpOp = function(deOppedOp){
+		var success = true;
+		console.log('deop');
+		var deOpPacket = {
+			room: $scope.currentRoom,
+			user: deOppedOp
+		};
+		socket.emit('deop', deOpPacket, function(succes, reason){
+			if(!success){
+				$scope.errorMessage = reason;
+			}
+		});
+	};
+	socket.on('deopped', function(room, deOppedUser, op){
+		var success = true;
+		if($scope.currentUser === op && $scope.currentRoom === room){
+			var deOpMessage = '*** ' + deOppedUser + ' was deopped by me. ***';
+			var packet = {
+				msg: deOpMessage,
+				roomName: $scope.currentRoom
+			};
+			socket.emit('sendmsg', packet, function(success, reason){
+				if(!success){
+					$scope.errorMessage = reason;
+				}
+			});
+		}
+	});
+/********************************************** // DEOP *************************/
 
 	// The angular-function sendMessage()
 	$scope.sendMessage = function() {
