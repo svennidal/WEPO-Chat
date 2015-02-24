@@ -46,7 +46,6 @@ ChatClient.controller('RoomsController', function ($scope, $location, $rootScope
 	// Getting a list of all active rooms - SDB
 	socket.emit('rooms');
 	socket.on('roomlist', function(roomList){
-		console.log(roomList);
 
 		for(var room in roomList){
 			$scope.rooms.push(room);
@@ -61,6 +60,8 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 	$scope.currentUsers = [];
 	$scope.currentOps = [];
 	$scope.errorMessage = '';
+	$scope.currentBanned = [];
+
 	
 	$scope.messages = [];
 
@@ -152,6 +153,7 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 		});
 	};
 	socket.on('banned', function(room, bannedUser, op){
+		$scope.currentBanned.push(bannedUser);
 		if($scope.currentUser === bannedUser && $scope.currentRoom === room){
 			$scope.leaveRoom();
 		}
@@ -171,6 +173,24 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 	});
 /********************************************* // BAN *************************/
 
+/********************************************** UNBAN *************************/
+	// The angular-function UnBanUser(unBannedUser)
+	$scope.unBanUser = function(unBannedUser){
+		var index = $scope.currentBanned.indexOf(unBannedUser);
+		if(index > -1){ $scope.currentBanned.splice(index, 1); }
+		console.log($scope.currentBanned + ' is no ' + index);
+		var success = true;
+		var unBanPacket = {
+			room: $scope.currentRoom,
+			user: unBannedUser
+		};
+		socket.emit('unban', unBanPacket, function(succes, reason){
+			if(!success){
+				$scope.errorMessage = reason;
+			}
+		});
+	};
+/********************************************** // UNBAN **********************/
 
 /************************************************* OP *************************/
 	// The angular-function Op(user)

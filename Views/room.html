@@ -52,4 +52,11 @@
 			</li>
 		</ul>
 	</div>
+	<div class="well">	
+		<ul>
+			<li class='banned' ng-repeat="banned in currentBanned">{{banned}}
+			<button class='btn btn-success btn-xs' ng-click='unBanUser(banned)'>Unban</button>
+			</li>
+		</ul>
+	</div>
 </div>
