@@ -48,20 +48,20 @@ ChatClient.controller('RoomsController', function ($scope, $location, $rootScope
 	// Getting a list of all active rooms - SDB
 	socket.emit('rooms');
 	socket.on('roomlist', function(roomList){
+		console.log(roomList);
 
 		for (var room in roomList){
-			if (!contains(roomList[room].banned, $scope.currentUser))
-			{
+			if (!contains(roomList[room].banned, $scope.currentUser)) {
 				$scope.rooms.push(room);
 			}
-			else
-			{	
-				console.log("bannadur i " + room)
+			else {	
+				console.log("bannadur i " + room);
 				$scope.banstring = "banned from";
 				$scope.banrooms.push(room);
 			}
-
-			
+			if(roomList[room].password){
+				console.log(room + ' has password');
+			}
 		}	
 	});
 	
@@ -110,7 +110,7 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 				$scope.errorMessage = reason;
 			}
 		});
-		var success = true;
+		success = true;
 		var topicMessage = '*** topic:"' + $scope.topic + '" was set by me. ***';
 		var packet = {
 			msg: topicMessage,
@@ -129,6 +129,38 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 		}
 	});
 	/******************************* // TOPIC ***********************************/
+
+	/******************************* PASSWORD ***********************************/
+	$scope.setPassword = function(){
+		console.log('Password being set: ' + $scope.password);
+		var passwordPacket = {
+			room: $scope.currentRoom,
+			password: $scope.password
+		};
+		var success = true;
+		socket.emit('setpassword', passwordPacket, function(success, reason){
+			if(!success){
+				$scope.errorMessage = reason;
+			}
+		});
+	};
+
+	$scope.unSetPassword = function(){
+		console.log('Password being unset');
+		var unSetPasswordPacket = {
+			room: $scope.currentRoom,
+		};
+		var success = true;
+		socket.emit('removepassword', unSetPasswordPacket, function(success, reason){
+			if(!success){
+				$scope.errorMessage = reason;
+			}
+		});
+		$('#passwordInput').val('');
+	};
+
+	/******************************* // PASSWORD ********************************/
+
 
 
 	// Creating a object for the serverside joinroom operation

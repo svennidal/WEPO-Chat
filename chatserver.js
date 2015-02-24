@@ -289,9 +289,11 @@ io.sockets.on('connection', function (socket) {
 
 		//If user is OP
 		if(rooms[passwordObj.room].ops[socket.username] !== undefined) {
+			console.log('OK setting password: ' + passwordObj.password + ' for room: ' + passwordObj.room);
 			rooms[passwordObj.room].setPassword(passwordObj.password);
 			fn(true);
 		}
+		console.log('Error setting password');
 		fn(false);
 	});
 
