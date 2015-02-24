@@ -104,10 +104,22 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 			room: $scope.currentRoom,
 			user: kickedUser
 		};
-		socket.emit('kick', kickPacket, function() {
-			// TODO: fix
+		socket.emit('kick', kickPacket, function(success, reason) {
+			if(!success){
+				$scope.errorMessage = reason;
+			}
 		});
 	};
+
+	// If a user is kicked
+	socket.on('kicked', function(room, kickedUser, op){
+		if($scope.currentUser === kickedUser){
+			console.log('You are the kicked user');
+		}
+	});
+
+
+
 	$scope.banUser = function(bannedUser){
 		var BanPacket = {
 			room: $scope.currentRoom,
