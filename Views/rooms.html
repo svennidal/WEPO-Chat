@@ -9,7 +9,7 @@
 	</ul>
 </div>
 <h4>{{banstring}}</h4>
-<div class="well" ng-show='CurrentUserIsBanned'>
+<div class="well" ng-cloak ng-show='CurrentUserIsBanned'>
 	<ul ng-repeat="room in banrooms">
 		<li>{{room}}</li>
 	</ul>
