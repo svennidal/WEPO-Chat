@@ -43,12 +43,15 @@ ChatClient.controller('RoomsController', function ($scope, $location, $rootScope
 	$scope.curruserisbanned = false;
 	$scope.lockedRooms = [];
 
+
+/*************************************** CREATE ROOM *************************/
 	// Creating a room - SDB
 	$scope.createRoom = function(){
 		console.log('createRoom: ' + $scope.newRoom);
 		$scope.rooms.push($scope.newRoom);
 	};
-
+/************************************* // CREATE ROOM *************************/
+/*********************************************** REFRESH ROOM LIST ************/
 	// Getting a list of all active rooms - SDB
 	socket.emit('rooms');
 	socket.on('roomlist', function(roomList){
@@ -68,8 +71,20 @@ ChatClient.controller('RoomsController', function ($scope, $location, $rootScope
 				$scope.rooms.push(room);
 			}
 		}
-
 	});
+/******************************************** // REFRESH ROOM LIST ************/
+
+
+
+/****************************************** LOGOUT ****************************/
+	$scope.disconnect = function(){
+		socket.emit('disconnected');
+		console.log('disconnection: ' + document.location);
+		var url = '/#/login';
+		document.location = url;
+	};
+/*************************************** // LOGOUT ****************************/
+
 	
 });
 
@@ -383,6 +398,24 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 		$scope.messages = history;
 	});
 /******************************************* SEND MESSAGE *********************/
+
+
+/****************************************** LOGOUT ****************************/
+	$scope.disconnect = function(){
+		var success = true;
+		socket.emit('partroom', $scope.currentRoom, function(success, reason){
+			if(!success){
+				$scope.errorMessage = reason;
+			}
+		});
+		socket.emit('disconnected');
+		console.log('disconnection: ' + document.location);
+		var url = '/#/login';
+		document.location = url;
+	};
+/*************************************** // LOGOUT ****************************/
+
+
 }); // room-Controller
 
 

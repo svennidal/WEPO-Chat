@@ -35,6 +35,7 @@
 <div class="col-md-3">
 	<h4>Users in this room</h4>
 	<button type='button' class='btn btn-warning btn-sm' ng-click='leaveRoom()' href='/#/rooms/{{currentUser}}'>Leave</button>
+	<button type='button' class='btn btn-danger btn-sm' ng-click='disconnect()' href='/#/rooms/{{currentUser}}'>Disconnect</button>
 	<div class="well">	
 		<ul>
 			<li class='ops' ng-repeat="op in currentOps">{{op}}
