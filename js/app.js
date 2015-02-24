@@ -98,6 +98,7 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 
 
 
+/********************************************** KICK *************************/
 	// The angular-function kickUser(user)
 	$scope.kickUser = function(kickedUser){
 		var kickPacket = {
@@ -111,14 +112,25 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 		});
 	};
 
-	// If a user is kicked
+	// When a user is kicked the server emits 'kicked'
 	socket.on('kicked', function(room, kickedUser, op){
-		console.log('kicked');
-		if($scope.currentUser === kickedUser){
-			console.log('You are the kicked user');
+		if($scope.currentUser === kickedUser && $scope.currentRoom === room){
 			$scope.leaveRoom();
 		}
+		if($scope.currentUser === op && $scope.currentRoom === room){
+			var kickMessage = kickedUser + ' was kicked by me.';
+			var packet = {
+				msg: kickMessage,
+				roomName: $scope.currentRoom
+			};
+			socket.emit('sendmsg', packet, function(success, reason){
+				if(!success){
+					$scope.errorMessage = reason;
+				}
+			});
+		}
 	});
+/******************************************** // KICK *************************/
 
 
 
