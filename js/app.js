@@ -36,6 +36,8 @@ ChatClient.controller('RoomsController', function ($scope, $location, $rootScope
 	// TODO: Query chat server for active rooms
 	$scope.currentUser = $routeParams.user;
 	$scope.rooms = [];
+	$scope.banrooms = [];
+	$scope.banstring = "";
 
 	// Creating a room - SDB
 	$scope.createRoom = function(){
@@ -46,14 +48,27 @@ ChatClient.controller('RoomsController', function ($scope, $location, $rootScope
 	// Getting a list of all active rooms - SDB
 	socket.emit('rooms');
 	socket.on('roomlist', function(roomList){
-		console.log(roomList);
 
-		for(var room in roomList){
-			$scope.rooms.push(room);
-		}
+		for (var room in roomList){
+			if (!contains(roomList[room].banned, $scope.currentUser))
+			{
+				$scope.rooms.push(room);
+			}
+			else
+			{	
+				console.log("bannadur i " + room)
+				$scope.banstring = "banned from";
+				$scope.banrooms.push(room);
+			}
+
+			
+		}	
 	});
-
+	
 });
+
+
+
 
 ChatClient.controller('RoomController', function ($scope, $location, $rootScope, $routeParams, socket) {
 	$scope.currentRoom = $routeParams.room;
@@ -131,7 +146,13 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 			// Do something
 		});
 	}
-
+	socket.on('banned', function(room, bannedUser, op){
+		console.log('kicked');
+		if($scope.currentUser === bannedUser){
+			console.log('You are the banned user');
+			$scope.leaveRoom();
+		}
+	});
 
 
 	// The angular-function sendMessage()
@@ -163,3 +184,14 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 
 });
 
+contains = function(arr, obj){
+	//console.log("contains keyrt med " + obj);
+	for (var user in arr) {
+		{
+			//console.log("bera saman " + user + " og " + obj);
+			if(user === obj)
+			return true;
+		}
+	}
+	return false;
+};
