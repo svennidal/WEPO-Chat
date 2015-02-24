@@ -18,6 +18,7 @@ ChatClient.controller('LoginController', function ($scope, $location, $rootScope
 	$scope.nickname = '';
 
 	$scope.login = function() {			
+		console.log('login');
 		if ($scope.nickname === '') {
 			$scope.errorMessage = 'Please choose a nick-name before continuing!';
 		} else {
@@ -32,39 +33,58 @@ ChatClient.controller('LoginController', function ($scope, $location, $rootScope
 	};
 });
 
+
 ChatClient.controller('RoomsController', function ($scope, $location, $rootScope, $routeParams, socket) {
 	// TODO: Query chat server for active rooms
 	$scope.currentUser = $routeParams.user;
 	$scope.rooms = [];
 	$scope.banrooms = [];
 	$scope.banstring = "";
+	$scope.curruserisbanned = false;
+	$scope.lockedRooms = [];
 
+
+/*************************************** CREATE ROOM *************************/
 	// Creating a room - SDB
 	$scope.createRoom = function(){
 		console.log('createRoom: ' + $scope.newRoom);
 		$scope.rooms.push($scope.newRoom);
 	};
-
+/************************************* // CREATE ROOM *************************/
+/*********************************************** REFRESH ROOM LIST ************/
 	// Getting a list of all active rooms - SDB
 	socket.emit('rooms');
 	socket.on('roomlist', function(roomList){
 		console.log(roomList);
 
+		$scope.rooms = [];
+
 		for (var room in roomList){
-			if (!contains(roomList[room].banned, $scope.currentUser)) {
-				$scope.rooms.push(room);
-			}
-			else {	
+			if(contains(roomList[room].banned, $scope.currentUser)){
+				$scope.CurrentUserIsBanned = true;
 				console.log("bannadur i " + room);
 				$scope.banstring = "banned from";
 				$scope.banrooms.push(room);
+			} else if(roomList[room].password){
+				$scope.lockedRooms.push(room);
+			} else {
+				$scope.rooms.push(room);
 			}
-			if(roomList[room].password){
-				console.log(room + ' has password');
-			}
-		}	
+		}
 	});
-	
+/********************************************* // REFRESH ROOM LIST ************/
+
+
+
+/****************************************** LOGOUT ****************************/
+	$scope.disconnect = function(){
+		socket.emit('disconnected');
+		console.log('disconnection: ' + document.location);
+		var url = '/#/login';
+		document.location = url;
+	};
+/*************************************** // LOGOUT ****************************/
+
 });
 
 
@@ -73,6 +93,7 @@ ChatClient.controller('RoomsController', function ($scope, $location, $rootScope
 ChatClient.controller('RoomController', function ($scope, $location, $rootScope, $routeParams, socket) {
 	$scope.currentRoom = $routeParams.room;
 	$scope.currentUser = $routeParams.user;
+	$scope.currentPassword = $routeParams.pass;
 	$scope.currentUsers = [];
 	$scope.currentOps = [];
 	$scope.errorMessage = '';
@@ -97,6 +118,41 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 			}
 		}
 	});		
+
+
+	/********************** JOINING AND LEAVING ROOMS ***************************/
+	// Creating a object for the serverside joinroom operation
+	// Password property needs to be changed in order to allow for a password.
+	// SDB
+	console.log($scope.currentPassword);
+	var joinObj = {
+		room: $scope.currentRoom,
+		pass: $scope.currentPassword
+	};
+	socket.emit('joinroom', joinObj, function (success, reason) {
+		if (!success)
+		{
+			$scope.errorMessage = reason;
+			var url = '/#/rooms/' + $scope.currentUser + '/';
+			document.location = url;
+			$scope.errorMessage = reason;
+		}
+	});
+
+	// Leaving room
+	$scope.leaveRoom = function(){
+		console.log('LeaveRoom: ' + document.location);
+		var url = '/#/rooms/' + $scope.currentUser + '/';
+		document.location = url;
+		socket.emit('partroom', $scope.currentRoom, function(success, reason){
+			if(!success){
+				$scope.errorMessage = reason;
+			}
+		});
+	};
+	/******************** // JOINING AND LEAVING ROOMS **************************/
+
+
 
 	/******************************* TOPIC **************************************/
 	$scope.setTopic = function(){
@@ -130,6 +186,8 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 	});
 	/******************************* // TOPIC ***********************************/
 
+
+
 	/******************************* PASSWORD ***********************************/
 	$scope.setPassword = function(){
 		console.log('Password being set: ' + $scope.password);
@@ -160,34 +218,6 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 	};
 
 	/******************************* // PASSWORD ********************************/
-
-
-
-	// Creating a object for the serverside joinroom operation
-	// Password property needs to be changed in order to allow for a password.
-	// SDB
-	var joinObj = {
-		room: $scope.currentRoom,
-		pass: ''
-	};
-	socket.emit('joinroom', joinObj, function (success, reason) {
-		if (!success)
-		{
-			$scope.errorMessage = reason;
-		}
-	});
-
-
-	$scope.leaveRoom = function(){
-		console.log('LeaveRoom: ' + document.location);
-		var url = '/#/rooms/' + $scope.currentUser + '/';
-		document.location = url;
-		socket.emit('partroom', $scope.currentRoom, function(success, reason){
-			if(!success){
-				$scope.errorMessage = reason;
-			}
-		});
-	};
 
 
 
@@ -262,7 +292,6 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 		}
 	});
 /********************************************* // BAN *************************/
-
 /********************************************** UNBAN *************************/
 	// The angular-function UnBanUser(unBannedUser)
 	$scope.unBanUser = function(unBannedUser){
@@ -281,6 +310,8 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 		});
 	};
 /********************************************** // UNBAN **********************/
+
+
 
 /************************************************* OP *************************/
 	// The angular-function Op(user)
@@ -312,7 +343,6 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 		}
 	});
 /********************************************** // OP *************************/
-
 /************************************************* DEOP *************************/
 	// The angular-function DeOp(user)
 	$scope.deOpOp = function(deOppedOp){
@@ -343,8 +373,11 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 			});
 		}
 	});
-/********************************************** // DEOP *************************/
+/********************************************** // DEOP ***********************/
 
+
+
+/******************************************* SEND MESSAGE *********************/
 	// The angular-function sendMessage()
 	$scope.sendMessage = function() {
 		console.log($scope.message);
@@ -365,14 +398,30 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 	// Updating the chat history according to the current room. - SDB
 	socket.on('updatechat', function(roomName, history){
 		$scope.messages = history;
-		/*
-		console.log('routeParams: ' + $routeParams.room);
-		console.log('roomName from chatserver: ' + roomName);
-		console.log('history from chatserver: ' + history);
-		*/
 	});
+/******************************************* SEND MESSAGE *********************/
 
-});
+
+/****************************************** LOGOUT ****************************/
+	$scope.disconnect = function(){
+		var success = true;
+		socket.emit('partroom', $scope.currentRoom, function(success, reason){
+			if(!success){
+				$scope.errorMessage = reason;
+			}
+		});
+		socket.emit('disconnected');
+		console.log('disconnection: ' + document.location);
+		var url = '/#/login';
+		document.location = url;
+	};
+/*************************************** // LOGOUT ****************************/
+
+
+}); // room-Controller
+
+
+
 
 contains = function(arr, obj){
 	//console.log("contains keyrt med " + obj);
