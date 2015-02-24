@@ -39,25 +39,25 @@
 	<div class="well">	
 		<ul>
 			<li class='ops' ng-repeat="op in currentOps">{{op}}
-			<button class='btn btn-warning btn-xs' ng-click='kickUser(op)'>Kick</button>
-			<button class='btn btn-danger btn-xs' ng-click='banUser(op)'>Ban</button>
-			<button class='btn btn-info btn-xs' ng-click='deOpOp(op)'>DeOp</button>
+			<button class='btn btn-warning btn-xs' ng-cloak ng-show='currentUserIsOp' ng-click='kickUser(op)'>Kick</button>
+			<button class='btn btn-danger btn-xs' ng-cloak ng-show='currentUserIsOp' ng-click='banUser(op)'>Ban</button>
+			<button class='btn btn-info btn-xs' ng-cloak ng-show='currentUserIsOp' ng-click='deOpOp(op)'>DeOp</button>
 			</li>
 		</ul>
 	</div>
 	<div class="well">	
 		<ul>
 			<li class='users' ng-repeat="user in currentUsers">{{user}}
-			<button class='btn btn-warning btn-xs' ng-click='kickUser(user)'>Kick</button>
-			<button class='btn btn-danger btn-xs' ng-click='banUser(user)'>Ban</button>
-			<button class='btn btn-info btn-xs' ng-click='opUser(user)'>Op</button>
+			<button class='btn btn-warning btn-xs' ng-cloak ng-show='currentUserIsOp' ng-click='kickUser(user)'>Kick</button>
+			<button class='btn btn-danger btn-xs' ng-cloak ng-show='currentUserIsOp' ng-click='banUser(user)'>Ban</button>
+			<button class='btn btn-info btn-xs' ng-cloak ng-show='currentUserIsOp' ng-click='opUser(user)'>Op</button>
 			</li>
 		</ul>
 	</div>
 	<div class="well">	
 		<ul>
 			<li class='banned' ng-repeat="banned in currentBanned">{{banned}}
-			<button class='btn btn-success btn-xs' ng-click='unBanUser(banned)'>Unban</button>
+			<button class='btn btn-success btn-xs' ng-cloak ng-show='currentUserIsOp' ng-click='unBanUser(banned)'>Unban</button>
 			</li>
 		</ul>
 	</div>
