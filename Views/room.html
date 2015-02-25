@@ -30,9 +30,10 @@
 		<button type='button' class='btn btn-primary' ng-click='sendMessage()'>Send</button>
 		<button type='button' class='btn btn-primary' ng-click='sendPMessage()'>SendPM</button>
 		<select class="form-control" id="sel1" ng-model="sendpmto">
-		<option ng-repeat="op in currentOps">{{op}}</option>
-		<option ng-repeat="user in currentUsers">{{user}}</option>
-      </select>
+			<option value='' disabled selected>Select a user to send a message</option>
+			<option ng-repeat="op in currentOps">{{op}}</option>
+			<option ng-repeat="user in currentUsers">{{user}}</option>
+		</select>
 	</form>
 
 </div>
