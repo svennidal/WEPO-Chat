@@ -314,15 +314,15 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 /******************************************* SEND PRIVATE MESSAGE *************/
 
 $scope.sendPMessage = function() {
-	if($scope.sendpmto === "")
+	if($scope.sendpmto === ""){
 		return;
+	}
 	var PMpacket = {
 		message: $scope.message,
 		nick: $scope.sendpmto
 	};
 	socket.emit('privatemsg', PMpacket, function(success, reason){
-		if(!success)
-			{
+		if(!success) {
 				$scope.errorMessage = reason;
 			}
 		// clearing the textbox
@@ -330,7 +330,7 @@ $scope.sendPMessage = function() {
 	});
 	console.log($scope.message);
 	console.log($scope.sendpmto);
-}
+};
 	socket.on('recv_privatemsg', function(username_, message_){
 		//console.log(username_ + " says " + message_ );
 		$scope.currentPrivateMessage = (username_ + " says " + message_);
