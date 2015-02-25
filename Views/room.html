@@ -1,15 +1,19 @@
 <div class="alert alert-danger" ng-cloak ng-show="errorMessage != ''">
 	{{errorMessage}}
 </div>
-<div class="alert alert-info" ng-cloak ng-show="currentPrivateMessage != ''">
-	{{currentPrivateMessage}}
+<div class='row'>
+	<div class='col-sm-9'>
+		<h3>Hi {{currentUser}} - Room {{currentRoom}}</h3>
+		<h4 class='topic' ng-cloak ng-show='!currentUserIsOp'>{{currentTopic}}</h4>
+		<div class='opTopic' ng-cloak ng-show='currentUserIsOp'>
+			<input type='text' id='topicInput' ng-model='topic' placeholder='{{currentTopic}}' >
+			<button class='btn btn-primary btn-xs' id='buttonTopic' ng-click='setTopic()'>Set Topic</button>
+		</div>
+	</div>
+	<div class='col-sm-3'>
+		<button type='button' class='btn btn-danger btn-sm'id='buttonDisconnect' ng-click='disconnect()' href='/#/rooms/{{currentUser}}'>Disconnect</button>
+	</div>
 </div>
-<h3>Hi {{currentUser}} - Room {{currentRoom}}</h3>
-<div class='opTopic' ng-cloak ng-show='currentUserIsOp'>
-	<input type='text' id='topicInput' ng-model='topic' placeholder='{{currentTopic}}' >
-	<button class='btn btn-primary btn-xs' id='buttonTopic' ng-click='setTopic()'>Set Topic</button>
-</div>
-<h4 class='topic' ng-cloak ng-show='!currentUserIsOp'>{{currentTopic}}</h4>
 <div class="col-md-9">
 
 	<table class='messageList'>
@@ -20,15 +24,7 @@
 		</tr>
 	</table>
 
-		<!--
-		<ul>
-			<li ng-repeat='msg in messages'>{{msg.timestamp}}  <h4>{{msg.nick}}</h4>:  {{msg.message}}</li>
-		</ul>
-	</div>
-	-->
-		<!--</div>-->
-
-	<form ng-submit='sendMessage()'>
+	<form ng-submit='sendMessage()' id='sendMessageBar'>
 		<input type='text' class='form-control' id='message' autocomplete='off' name='message' ng-model='message' />
 		<!--<input type='submit' value='Send' />-->
 		<button type='button' class='btn btn-primary' ng-click='sendMessage()'>Send</button>
@@ -43,7 +39,6 @@
 <div class="col-md-3">
 	<h4>Users in this room</h4>
 	<button type='button' class='btn btn-warning btn-sm' ng-click='leaveRoom()' href='/#/rooms/{{currentUser}}'>Leave</button>
-	<button type='button' class='btn btn-danger btn-sm' ng-click='disconnect()' href='/#/rooms/{{currentUser}}'>Disconnect</button>
 	<div class="well">	
 		<ul>
 			<li class='ops' ng-repeat="op in currentOps">{{op}}

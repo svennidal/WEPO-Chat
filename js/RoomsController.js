@@ -13,6 +13,7 @@ ChatClient.controller('RoomsController', function ($scope, $location, $rootScope
 	$scope.createRoom = function(){
 		console.log('createRoom: ' + $scope.newRoom);
 		$scope.rooms.push($scope.newRoom);
+		$('#newRoom').val('');
 	};
 /************************************* // CREATE ROOM *************************/
 /*********************************************** REFRESH ROOM LIST ************/

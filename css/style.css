@@ -3,6 +3,7 @@
 html {
 	position: absolute;
 	min-height: 100%;
+	min-width: 100%;
 }
 body{
 	margin-bottom: 60px;
@@ -17,6 +18,7 @@ body{
 
 #main {
 	margin-top:100px;
+	min-width: 100%;
 }
 
 form { background: #000; padding: 3px; position: fixed; bottom: 60px; right: 33%; width: 66%; }
@@ -29,6 +31,11 @@ form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 
 .messageList {
 	width: 100%;
 	max-width: 100%;
+	min-height: 60%;
+	max-height: 60%;
+	overflow: auto;
+	position: absolute;
+	/*position: absolute;*/
 }
 .messageList .singleMessage {
 }
@@ -38,10 +45,10 @@ form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 
 }
 .messageList .nick {
 	font-weight: bold;
-	margin-right: 10px;
 }
 .messageList .messageData {
-	min-width: 300px;
+	min-width: 400px;
+	padding-left: 50px;
 	
 }
 
@@ -77,4 +84,19 @@ form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 
 #buttonDisconnect {
 	position: relative;
 	float: right;
+}
+
+#sendMessageBar {
+	width: 60.1%;
+	left: 10px;
+	border-radius: 4px;
+	background-color: #E1E1A4;
+}
+
+#message {
+	width: 81.5%;
+}
+
+#newRoom {
+	width: 90.5%;
 }
