@@ -4,7 +4,6 @@ ChatClient.controller('LoginController', function ($scope, $location, $rootScope
 	$scope.nickname = '';
 
 	$scope.login = function() {			
-		console.log('login');
 		if ($scope.nickname === '') {
 			$scope.errorMessage = 'Please choose a nick-name before continuing!';
 		} else {
