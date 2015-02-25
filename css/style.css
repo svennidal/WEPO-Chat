@@ -28,18 +28,22 @@ form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 
 #messages li { padding: 5px 10px; }
 #messages li:nth-child(even) { background: #eee; }
 
+.chatbox {
+	display: block;
+	overflow: auto;
+}
+
 .messageList {
 	width: 100%;
 	max-width: 100%;
 	min-height: 60%;
 	max-height: 60%;
-	overflow: auto;
-	position: absolute;
-	/*position: absolute;*/
+	/*overflow: auto;*/
+	position: relative;
 }
 .messageList .singleMessage {
+	overflow: auto;
 }
-
 .messageList .singleMessage:nth-child(odd) {
 	background: #eee;
 }
@@ -49,10 +53,10 @@ form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 
 .messageList .messageData {
 	min-width: 400px;
 	padding-left: 50px;
-	
 }
-
 .messageList .timestamp {
+	text-align: right;
+	padding-right: 10px;
 }
 
 .users {
@@ -82,6 +86,11 @@ form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 
 }
 
 #buttonDisconnect {
+	position: relative;
+	float: right;
+}
+
+#buttonLeave {
 	position: relative;
 	float: right;
 }
