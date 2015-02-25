@@ -7,6 +7,7 @@ module.exports = function ( grunt ) {
 			'js/RoomsController.js',
 			'js/RoomController.js', 
 			'js/contains.js', 
+			'js/socket-factory.js',
 			'gulpfile.js', 
 			'Gruntfile.js'],
 			Gruntfile: ['Gruntfile.js'],

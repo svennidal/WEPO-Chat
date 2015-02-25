@@ -24,6 +24,4 @@ gulp.task('js', function(){
 		.pipe(notify({ message: 'Finished minifying'}));
 });
 
-gulp.task('default', function(){
-	gulp.run('js');
-});
+gulp.task('default', ['js']);

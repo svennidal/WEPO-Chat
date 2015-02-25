@@ -21,7 +21,7 @@
 
 		<div class='chatbox'>
 			<table class='messageList'>
-				<tr class='singleMessage' ng-repeat='msg in messages'>
+				<tr class='singleMessage' ng-repeat='msg in messages | orderBy:"timestamp":true'>
 					<td class='nick'>{{msg.nick}}</td>
 					<td class='messageData'>{{msg.message}}</td>
 					<td class='timestamp'>{{msg.timestamp}}</td>
