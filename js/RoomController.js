@@ -312,9 +312,9 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 
 	// Server responds by updating the messagelist
 	socket.on('updatechat', function(roomName, history){
-		if($scope.currentRoom === room){
+		if($scope.currentRoom === roomName){
 			$scope.messages = history;
-		{
+		}
 	});
 /******************************************* SEND MESSAGE *********************/
 
