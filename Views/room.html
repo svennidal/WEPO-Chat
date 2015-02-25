@@ -1,6 +1,9 @@
 <div class="alert alert-danger" ng-cloak ng-show="errorMessage != ''">
 	{{errorMessage}}
 </div>
+<div class="alert alert-info" ng-cloak ng-show="currentPrivateMessage != ''">
+	{{currentPrivateMessage}}
+</div>
 <h3>Hi {{currentUser}} - Room {{currentRoom}}</h3>
 <div class='opTopic' ng-cloak ng-show='currentUserIsOp'>
 	<input type='text' id='topicInput' ng-model='topic' placeholder='{{currentTopic}}' >

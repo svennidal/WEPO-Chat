@@ -9,6 +9,7 @@ ChatClient.controller('RoomController', function ($scope, $location, $rootScope,
 	$scope.currentTopic = '';
 	$scope.currentUserIsOp = false;
 	$scope.sendpmto = "";
+	$scope.currentPrivateMessage = "";
 
 	
 	$scope.messages = [];
@@ -331,7 +332,8 @@ $scope.sendPMessage = function() {
 	console.log($scope.sendpmto);
 }
 	socket.on('recv_privatemsg', function(username_, message_){
-		console.log(message_ + " from " + username_);
+		//console.log(username_ + " says " + message_ );
+		$scope.currentPrivateMessage = (username_ + " says " + message_);
 	});
 /*************************************** // SEND PRIVATE MESSAGE ***************/
 
